@@ -24,7 +24,7 @@ async def setup_hook():
 bot.setup_hook = setup_hook
 
 
-popcorn_scooper_role = os.getenv("POPCORN_ROLE")           # role from env
+base_role = os.getenv("POPCORN_ROLE")           # role from env
 master_role = os.getenv("MASTER_ROLE")
 
 announcement_channel = os.getenv("ANNOUNCEMENT_CHANNEL_ID") # server announcement channel
@@ -63,7 +63,7 @@ async def on_message(message):
 @bot.command()
 @commands.has_role(master_role)
 async def assign(ctx, *, member: discord.Member):
-    role = discord.utils.get(ctx.guild.roles, name=popcorn_scooper_role)
+    role = discord.utils.get(ctx.guild.roles, name=base_role)
     if role:
         await member.add_roles(role)
         await ctx.send(f"{member.mention} is now one of the {role}!")
@@ -81,7 +81,7 @@ async def assign_error(ctx, error):
 @bot.command()
 @commands.has_role(master_role)
 async def remove(ctx, *, member: discord.Member):
-    role = discord.utils.get(ctx.guild.roles, name=popcorn_scooper_role)
+    role = discord.utils.get(ctx.guild.roles, name=base_role)
     if role:
         await member.remove_roles(role)
         await ctx.send(f"{member.mention} is no longer one of the {role}!")
