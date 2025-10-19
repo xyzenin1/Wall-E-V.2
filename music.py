@@ -42,6 +42,7 @@ class Music(commands.Cog):
         
         self.vc = {}
         self.embedBlue = 0x3498db
+        self.embedRed = 0xFF0000
         
     @commands.Cog.listener()
     async def on_ready(self):
@@ -79,6 +80,23 @@ class Music(commands.Cog):
         embed.set_thumbnail(url=thumbnail)      # thumbnail
         embed.set_footer(text=f'Song added by: {str(author)}', icon_url=avatar)     # author
         return embed
+    
+    
+    def added_song_embed(self, ctx, song):
+        title = song['title']
+        link = song['link']
+        thumbnail = song['thumbnail']
+        author = ctx.author
+        avatar = author.avatar_url
+
+        embed = discord.Embed(
+            title="Song Added To Queue!",
+            description=f'[{title}]({link})',
+            colour=self.embedRed,
+        )
+        embed.set_thumbnail(url=thumbnail)
+        embed.set_footer(text=f'Song added by: {str(author)}', icon_url=avatar)
+        return embed
         
     
     # join vc   
@@ -92,6 +110,21 @@ class Music(commands.Cog):
                 return
         else:
             await self.vc[id].move_to(channel)
+            
+    
+    # get youtube title
+    def get_youtube_title(self, videoID):
+        params = {
+            "format": "json",
+            "url": "https://www.youtube.com/watch?v=%s" % videoID
+        }
+        url = "https://www.youtube.com/oembed"
+        queryString = parse.urlencode(params)
+        url = url + "?" + queryString
+        with request.urlopen(url) as response:
+            responseText = response.read()
+            data = json.loads(responseText.decode())
+            return data['title']
             
 
     # search youtube
@@ -255,6 +288,93 @@ class Music(commands.Cog):
                 else:
                     message = "added to queue"
                     await ctx.send(message)
+                    
+                    
+                    
+    @commands.command(
+        name="search",
+        aliases=["find", "sr"],
+        help="Provides a list of YouTube search results"
+    )
+    async def search(self, ctx, *args):
+        search = " ".join(args)
+        id = int(ctx.guild.id)
+        
+        if not args:
+            await ctx.send("You must specify search terms!")
+            return
+        
+        try:
+            userChannel = ctx.author.voice.channel
+        except:
+            await ctx.send("You must be connected to a voice channel.")
+            return
+
+        await ctx.send("Searching...")
+
+        try:
+            songTokens = self.search_youtube(search)
+            
+            embedText = ""
+            for i, token in enumerate(songTokens):
+                url = 'https://www.youtube.com/watch?v=' + token
+                try:
+                    name = self.get_youtube_title(token)
+                    embedText += f"{i+1}. [{name}]({url})\n"
+                except:
+                    embedText += f"{i+1}. [Video]({url})\n"
+
+            searchResults = discord.Embed(
+                title="Search Results",
+                description=embedText + "\n\nReply with a number (1-10) to select a song, or 'cancel' to cancel.",
+                colour=self.embedRed
+            )
+            await ctx.send(embed=searchResults)
+            
+            def check(m):
+                return m.author == ctx.author and m.channel == ctx.channel
+            
+            try:
+                msg = await self.bot.wait_for('message', timeout=60.0, check=check)
+                
+                if msg.content.lower() == 'cancel':
+                    await ctx.send("Search cancelled.")
+                    return
+                
+                try:
+                    chosenIndex = int(msg.content) - 1
+                    if chosenIndex < 0 or chosenIndex >= len(songTokens):
+                        await ctx.send("Invalid selection. Please choose a number between 1-10.")
+                        return
+                    
+                    songRef = self.extract_youtube(songTokens[chosenIndex])
+                    if type(songRef) == type(True):
+                        await ctx.send("Could not download the song. Incorrect format, try different keywords.")
+                        return
+                    
+                    self.musicQueue[id].append([songRef, userChannel])
+                    
+                    embedResponse = discord.Embed(
+                        title=f"Option #{chosenIndex + 1} Selected",
+                        description=f"[{songRef['title']}]({songRef['link']}) added to the queue!",
+                        colour=self.embedRed
+                    )
+                    embedResponse.set_thumbnail(url=songRef['thumbnail'])
+                    await ctx.send(embed=embedResponse)
+                    
+                    if not self.is_playing[id]:
+                        await self.play_music(ctx)
+                        
+                except ValueError:
+                    await ctx.send("Invalid input. Please enter a number between 1-10.")
+                    return
+                    
+            except asyncio.TimeoutError:
+                await ctx.send("Search timed out. Please try again.")
+                
+        except:
+            await ctx.send("An error occurred during search")
+
 
 
     # pause
