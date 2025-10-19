@@ -214,6 +214,7 @@ class Music(commands.Cog):
             self.is_playing[id] = False
     
     
+    # play command
     @commands.command(
         name="play",
         aliases=["pl"],
@@ -227,21 +228,22 @@ class Music(commands.Cog):
         except:
             await ctx.send("Must be connected to a voice channel")
             return
-        
+        # if there are no inputs read
         if not args:
+            #if no song in queue
             if len(self.musicQueue[id]) == 0:
                 await ctx.send("There are no songs in queue to be played")
                 return
-            elif not self.is_playing[id]:
+            elif not self.is_playing[id]:       # if there is a song in queue but not playing
                 if self.musicQueue[id] == None or self.vc[id] == None:
                     await self.play_music(ctx)
-                else:
+                else:       # resume song
                     self.is_paused[id] = False
                     self.is_playing[id] = True
                     self.vc[id].resume()
             else:
                 return
-        else:
+        else:       # if there is arguments read
             song = self.extract_youtube(self.search_youtube(search)[0])
             if type(song) == type(True):
                 await ctx.send("Could not download song. Incorrect format")
