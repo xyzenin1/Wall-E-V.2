@@ -43,6 +43,7 @@ class Music(commands.Cog):
         self.vc = {}
         self.embedBlue = 0x3498db
         self.embedRed = 0xFF0000
+        self.embedGreen = 0x008000
         
     @commands.Cog.listener()
     async def on_ready(self):
@@ -376,6 +377,59 @@ class Music(commands.Cog):
             await ctx.send("An error occurred during search")
 
 
+    # show queue list
+    @commands.command(
+        name = "queue",
+        aliases = ["q"],
+        help = ""
+    )
+    async def queue(self, ctx):
+        id = int(ctx.guild.id)
+        returnValue = ""
+        if self.musicQueue[id] == []:
+            await ctx.send("There are no songs in queue!")
+            return
+        
+        for i in range(self.queueIndex[id], len(self.musicQueue[id])):
+            upNextSongs = len(self.musicQueue[id]) - self.queueIndex[id]
+            if i > 5 + upNextSongs:
+                break
+            returnIndex = i - self.queueIndex[id]
+            if returnIndex == 0:        # first in index is playing
+                returnIndex = "Playing"
+            elif returnIndex == 1:       # next song
+                returnIndex = "Next"
+            returnValue += f"{returnIndex} - [{self.musicQueue[id][i][0]['title']}]({self.musicQueue[id][i][0]['link']})\n"     # syntax
+            
+            if returnValue == "":
+                await ctx.send("There are no songs in queue at this time!")
+                return
+        
+        queue = discord.Embed(
+            title = "Current Queue",
+            description = returnValue,
+            colour = self.embedGreen
+        )
+        await ctx.send(embed=queue)
+    
+    
+    # clear queue
+    @commands.command(
+        name = "clearQueue",
+        aliases = ["clear", "cl"],
+        help = ""
+    )
+    async def clearQueue(self, ctx):
+        id = int(ctx.guild.id)
+        if self.musicQueue[id] == []:
+            ctx.send("Queue is already empty!")
+            return
+        else:
+            self.musicQueue[id] = []
+            await ctx.send("Queue has been cleared!")
+        
+        
+    
 
     # pause
     @commands.command(
