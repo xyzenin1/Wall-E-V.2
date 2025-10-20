@@ -394,12 +394,13 @@ class Music(commands.Cog):
             upNextSongs = len(self.musicQueue[id]) - self.queueIndex[id]
             if i > 5 + upNextSongs:
                 break
-            returnIndex = i - self.queueIndex[id]
-            if returnIndex == 0:        # first in index is playing
-                returnIndex = "Playing"
-            elif returnIndex == 1:       # next song
-                returnIndex = "Next"
-            returnValue += f"{returnIndex} - [{self.musicQueue[id][i][0]['title']}]({self.musicQueue[id][i][0]['link']})\n"     # syntax
+            returnIndex = i - self.queueIndex[id] + 1
+            if returnIndex == 1:        # first in index is playing
+                returnIndex = f"Curently Playing: \n{returnIndex} - [{self.musicQueue[id][i][0]['title']}]({self.musicQueue[id][i][0]['link']})"    # syntax
+            if returnIndex == 2:
+                returnIndex = f"Next: \n{returnIndex} - [{self.musicQueue[id][i][0]['title']}]({self.musicQueue[id][i][0]['link']})"
+                
+            returnValue += f"{returnIndex} - [{self.musicQueue[id][i][0]['title']}]({self.musicQueue[id][i][0]['link']})\n"
             
             if returnValue == "":
                 await ctx.send("There are no songs in queue at this time!")
@@ -419,16 +420,67 @@ class Music(commands.Cog):
         aliases = ["clear", "cl"],
         help = ""
     )
-    async def clearQueue(self, ctx):
+    async def clear(self, ctx):
         id = int(ctx.guild.id)
-        if self.musicQueue[id] == []:
-            ctx.send("Queue is already empty!")
-            return
-        else:
+        if self.vc[id] != None and self.is_playing[id]:
+            self.is_playing = self.is_paused = False
+            self.vc[id].stop()
+        
+        if self.musicQueue[id] != []:
+            await ctx.send("The music queue has been cleared.")
             self.musicQueue[id] = []
-            await ctx.send("Queue has been cleared!")
+        self.queueIndex = 0
+
+    
+    
+    @commands.command(
+        name = "removeSong",
+        aliases = ["rm"],
+        help = ""
+    )
+    async def remove(self, ctx, index: int = 1):
+        id = int(ctx.guild.id)
+        if not ctx.author.voice:
+            await ctx.send("Must be in a voice channel!")
+            return
         
+        if self.musicQueue[id] == []:
+            await ctx.send("There are no songs to remove!")
+            return
         
+        if index < 1 or index > len(self.musicQueue[id]):
+            await ctx.send(f"Invalid input! Please choose a number between 1 and {len(self.musicQueue[id])}")
+            return
+        
+        # skips song when currently playing is removed
+        if index == 1:
+            if self.is_playing and self.vc[id]:
+                self.vc[id].stop()
+        else:       # for other songs chosen
+            self.musicQueue[id].pop(index)      # pop out song regulary
+
+        await ctx.send("Song removed from queue!")
+        
+            
+            
+    # skip current song      
+    @ commands.command(
+        name="skip",
+        aliases=["sk"],
+        help="Skips to the next song in the queue."
+    )
+    async def skip(self, ctx):
+        id = int(ctx.guild.id)
+        if self.vc[id] == None:
+            await ctx.send("You need to be in a voice channel to use this command.")
+        elif self.queueIndex[id] >= len(self.musicQueue[id]) - 1:
+            await ctx.send("There is no next song in the queue. Replaying current song.")
+            self.vc[id].pause()
+            await self.play_music(ctx)  
+        elif self.vc[id] != None and self.vc[id]:
+            self.vc[id].pause()
+            self.queueIndex[id] += 1
+            await self.play_music(ctx)
     
 
     # pause
