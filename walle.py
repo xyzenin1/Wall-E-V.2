@@ -126,7 +126,6 @@ async def poll(ctx, *, question):
 
 
 
-
 # run bot
 def run_bot():
     bot.run(token, log_handler=handler, log_level=logging.DEBUG)

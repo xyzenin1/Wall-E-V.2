@@ -88,7 +88,7 @@ class Music(commands.Cog):
         link = song['link']
         thumbnail = song['thumbnail']
         author = ctx.author
-        avatar = author.avatar_url
+        avatar = author.display_avatar_url
 
         embed = discord.Embed(
             title="Song Added To Queue!",
@@ -534,7 +534,7 @@ class Music(commands.Cog):
     # leave
     @commands.command(
         name = "leave",
-        aliases = ["l"],
+        aliases = ["l", "stop"],
         help=""
     )
     async def leave(self, ctx):
@@ -546,6 +546,36 @@ class Music(commands.Cog):
             await ctx.send("Eeeevvv...aaa???")
             await self.vc[id].disconnect()
             self.vc[id] = None
+            
+            
+    @commands.command(
+        name = "ltg",
+        aliases = [""],
+        help = ""
+    )
+    async def ltg(self, ctx):
+        youtube_link = "UZROG81-V80"
+        id = int(ctx.guild.id)
+        
+        try:
+            userChannel = ctx.author.voice.channel
+        except:
+            await ctx.send("Must be connected to a voice channel")
+            return
+        
+        song = self.extract_youtube(youtube_link)
+        if type(song) == type(False):
+            await ctx.send("Could not download song. Incorrect format")
+        else:
+            self.musicQueue[id].append([song, userChannel])
+
+            if not self.is_playing[id]:
+                await self.play_music(ctx)
+            else:
+                await self.clear_queue(ctx)
+        
+                self.musicQueue[id].append([song, userChannel])
+                await self.play_music(ctx)
         
 
 # setup music function for bot
