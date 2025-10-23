@@ -1,0 +1,323 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+p {
+    color: black
+}
+
+#container {
+    display: flex;
+    margin-top: 35px;
+    gap: 20px;
+    margin-left: 50px;
+}
+
+#top {
+    background-color: red;
+    padding-top: 15px;
+    width: 100%;
+    margin-top: -15px;
+}
+
+
+#highBorderLine {
+    background-color: black;
+    margin: 0px;
+    margin-top: 50px;
+    width: 100%;
+    height: 5px;
+    padding: 0px;
+    display: flex;
+    
+}
+
+#blueCircle {
+    background-color: #005956;
+    margin-top: 15px;
+    margin-bottom: -35px;
+    margin-left: 20px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    border: 3px solid;
+    border-width: 3px;
+    box-shadow:
+        0 0 0 3px black,
+        0 0 0 6px gray,
+        0 0 0 9px black;
+}
+
+#generationSelect {
+    display: flex;
+    position: absolute;
+    margin-left: 255px;
+    width: 100px;
+    height: 20px;
+    margin-top: 160px;
+}
+
+#userInput {
+    display: flex;
+    width: 200px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 125px;
+    height: 75px;
+    border-radius: 15px;
+    text-align: center;
+    font-family: "VT323", monospace;
+    font-style: normal;
+    font-weight: 400;
+    color: black;
+}
+
+
+
+#pokemonInfoDisplay {
+    font-family: "VT323", monospace;
+    font-style: normal;
+    font-weight: 400;
+    background-color: lightblue;
+    color: black;
+    width: 300px;
+    height: 310px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-direction: column;
+    overflow: auto;
+    margin-top: 0;
+    margin-left: 0;
+    border: 5px solid;
+}
+
+.pokemonInfo {
+    margin-left: 5px;
+    padding: 5px;
+    display: none;
+    flex: 1;
+}
+
+.moveListInfo {
+    margin-left: 5px;
+    padding: 5px;
+    display: none;
+    flex: 1;
+}
+
+
+#buttonContainer {
+    display: flex;
+    gap: 25px;
+    margin-left: 120px;
+    margin-top: -20px;
+    margin-bottom: 10px;
+}
+
+#movesetButton, #detailButton {
+    width: 80px;
+    height: 15px;
+    border-radius: 50px;
+    position: relative; 
+}
+
+#movesetButton {
+    background-color: red;
+}
+
+#detailButton {
+    background-color: blue;
+}
+
+
+
+
+#movesetButton:hover {
+    background-color: darkred;
+}
+
+#detailButton:hover {
+    background-color: darkblue;
+}
+
+
+
+#pokemonSprite {
+    height: 200px;
+    background-color: black;
+    display: none;
+    width: 300px;
+    height: 300px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: 35px solid lightgrey;
+    border-top-width: 15px;
+    border-left-width: 60px;
+    border-bottom-width: 75px;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%, 0% 80%);
+}
+
+#pokeball {
+    background-image: url(./images/pokeball.jpg);
+    display: block;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 300px;
+    height: 300px;
+    border: 35px solid lightgrey;
+    border-top-width: 15px;
+    border-left-width: 60px;
+    border-bottom-width: 75px;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%, 0% 80%);
+}
+
+#pokeball_border {
+    background-color: black;
+    padding: 5px;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%, 0% 80%);
+}
+
+#statBox {
+    background-color: lightgrey;
+    width: 700px;
+    height: 250px;
+    border: 3px solid black;
+    display: grid;
+    margin-top: 50px;
+    margin-right: 5px;
+    gap: 10px;
+    padding: 10px;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 1fr;
+}
+
+#hp, #attack, #defense, #specialAttack, #specialDefense, #speed {
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    border: 1px solid black;
+    gap: 1px;
+}
+
+.hpBox, .attackBox, .defenseBox, .specialAttackBox, .specialDefenseBox, .speedBox {
+    background-color: gray;
+    width: 100%;
+    height: 10px;
+    flex: 1;
+    border: 1px solid black;
+}
+
+#statLabelHP, #statLabelAttack, #statLabelDefense, #statLabelSpecialAttack, #statLabelSpecialDefense, #statLabelSpeed {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: black;
+    padding: 5px 0;
+}
+
+
+#shinyButton {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    border: 5px solid black;
+    display: flex;
+    margin-left: 25px;
+    transition: 0.5s ease;
+    background-color: #3b3d3b;
+}
+
+#shinyButton:hover {
+    background-color: #161716;
+}
+
+#shinyButton.active {
+    background-color: #161716;
+}
+
+#descriptionBox {
+    width: 280px;
+    height: 100px;
+    background-color: lightblue;
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-direction: column;
+    overflow: auto;
+    border: 3px solid black;
+    left: 345px;
+    top: 500px;
+    font-family: "VT323", monospace;
+    font-style: normal;
+    font-weight: 400;
+    padding: 10px;
+}
+
+
+
+#pokemonCryButton {
+    position: absolute;
+    width: 50px;
+    height: 25px;
+    margin-top: -115px;
+    background-color: red;
+    border: 3px solid black;
+    border-radius: 5px;
+    margin-left: 125px;
+}
+
+#pokemonCryButton:hover {
+    background-color: darkred;
+    transition: 0.5s ease;
+}
+
+#speaker_container {
+    width: 85px;
+    height: 10px;
+    position: absolute;
+    background-color: gray;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    margin-left: 225px;
+    margin-top: -115px;
+}
+
+.speakerBox {
+    background-color: black;
+    width: 100%;
+    flex: 1;
+    padding: 2px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+
+.lit {
+    background-color: aqua;
+    transition: background-color 0.3s ease;
+}
+
+
+#evolutionContainer {
+    width: 565px;
+    height: 100px;
+    background-color:black;
+    position: relative;
+    left: 650px;
+    bottom: 110px;
+}
+
+#baseEvolutionBox, #evolution1Box, #evolution2Box {
+    width: 20px;
+    height: 10px;
+    background-color: red;
+    margin: auto;
+    border: 1px solid white;
+
+}

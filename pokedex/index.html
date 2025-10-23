@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeDex</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Double+Ink&family=VT323&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+    <select id="generationSelect">
+        <option value="1">Generation 1</option>
+        <option value="2">Generation 2</option>
+        <option value="3">Generation 3</option>
+        <option value="4">Generation 4</option>
+        <option value="5">Generation 5</option>
+        <option value="6">Generation 6</option>
+        <option value="7">Generation 7</option>
+        <option value="8">Generation 8</option>
+        <option value="9" selected>Generation 9</option>
+    </select>
+    
+    <div id="top">
+        <div id="blueCircle"></div>
+        <div id="highBorderLine"></div>
+    </div>
+
+    <div id="container">
+        <div id="pokemonImage">
+            <div id="pokeball_border">
+                <img id="pokeball" src="./images/pokeball.jpg">
+                <img alt="Pokemon sprite" id="pokemonSprite">
+            </div>
+        </div>
+
+        <div id="pokemonInfoDisplay">
+            <p id="moveList" class="moveListInfo">Move List:</p>
+            <p id="name" class="pokemonInfo">Name:</p>
+            <p id="id" class="pokemonInfo">ID:</p>
+            <p id="weight" class="pokemonInfo">Weight:</p>
+            <p id="height" class="pokemonInfo">Height:</p>
+            <p id="type" class="pokemonInfo">Type:</p>
+            <p id="weaknesses" class="pokemonInfo">Weaknesses:</p>
+            <p id="resistances" class="pokemonInfo">Resistances:</p>
+            <p id="immunities" class="pokemonInfo">Immunities:</p>
+        </div>
+
+        <div id="statBox">
+            <div id="hp">
+                <div id="hpBox1" class="hpBox"></div>
+                <div id="hpBox2" class="hpBox"></div>
+                <div id="hpBox3" class="hpBox"></div>
+                <div id="hpBox4" class="hpBox"></div>
+                <div id="hpBox5" class="hpBox"></div>
+                <div id="hpBox6" class="hpBox"></div>
+                <div id="hpBox7" class="hpBox"></div>
+                <div id="hpBox8" class="hpBox"></div>
+                <div id="hpBox9" class="hpBox"></div>
+                <div id="hpBox10" class="hpBox"></div>
+                <div id="hpBox11" class="hpBox"></div>
+                <div id="hpBox12" class="hpBox"></div>
+                <div id="hpBox13" class="hpBox"></div>
+                <div id="hpBox14" class="hpBox"></div>
+                <div id="hpBox15" class="hpBox"></div>
+            </div>
+            <div id="attack">
+                <div id="attackBox1" class="attackBox"></div>
+                <div id="attackBox2" class="attackBox"></div>
+                <div id="attackBox3" class="attackBox"></div>
+                <div id="attackBox4" class="attackBox"></div>
+                <div id="attackBox5" class="attackBox"></div>
+                <div id="attackBox6" class="attackBox"></div>
+                <div id="attackBox7" class="attackBox"></div>
+                <div id="attackBox8" class="attackBox"></div>
+                <div id="attackBox9" class="attackBox"></div>
+                <div id="attackBox10" class="attackBox"></div>
+                <div id="attackBox11" class="attackBox"></div>
+                <div id="attackBox12" class="attackBox"></div>
+                <div id="attackBox13" class="attackBox"></div>
+                <div id="attackBox14" class="attackBox"></div>
+                <div id="attackBox15" class="attackBox"></div>
+            </div>
+            <div id="defense">
+                <div id="defenseBox1" class="defenseBox"></div>
+                <div id="defenseBox2" class="defenseBox"></div>
+                <div id="defenseBox3" class="defenseBox"></div>
+                <div id="defenseBox4" class="defenseBox"></div>
+                <div id="defenseBox5" class="defenseBox"></div>
+                <div id="defenseBox6" class="defenseBox"></div>
+                <div id="defenseBox7" class="defenseBox"></div>
+                <div id="defenseBox8" class="defenseBox"></div>
+                <div id="defenseBox9" class="defenseBox"></div>
+                <div id="defenseBox10" class="defenseBox"></div>
+                <div id="defenseBox11" class="defenseBox"></div>
+                <div id="defenseBox12" class="defenseBox"></div>
+                <div id="defenseBox13" class="defenseBox"></div>
+                <div id="defenseBox14" class="defenseBox"></div>
+                <div id="defenseBox15" class="defenseBox"></div>
+            </div>
+            <div id="specialAttack">
+                <div id="specialAttackBox1" class="specialAttackBox"></div>
+                <div id="specialAttackBox2" class="specialAttackBox"></div>
+                <div id="specialAttackBox3" class="specialAttackBox"></div>
+                <div id="specialAttackBox4" class="specialAttackBox"></div>
+                <div id="specialAttackBox5" class="specialAttackBox"></div>
+                <div id="specialAttackBox6" class="specialAttackBox"></div>
+                <div id="specialAttackBox7" class="specialAttackBox"></div>
+                <div id="specialAttackBox8" class="specialAttackBox"></div>
+                <div id="specialAttackBox9" class="specialAttackBox"></div>
+                <div id="specialAttackBox10" class="specialAttackBox"></div>
+                <div id="specialAttackBox11" class="specialAttackBox"></div>
+                <div id="specialAttackBox12" class="specialAttackBox"></div>
+                <div id="specialAttackBox13" class="specialAttackBox"></div>
+                <div id="specialAttackBox14" class="specialAttackBox"></div>
+                <div id="specialAttackBox15" class="specialAttackBox"></div>
+            </div>
+            <div id="specialDefense">
+                <div id="specialDefenseBox1" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox2" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox3" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox4" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox5" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox6" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox7" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox8" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox9" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox10" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox11" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox12" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox13" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox14" class="specialDefenseBox"></div>
+                <div id="specialDefenseBox15" class="specialDefenseBox"></div>
+            </div>
+            <div id="speed">
+                <div id="speedBox1" class="speedBox"></div>
+                <div id="speedBox2" class="speedBox"></div>
+                <div id="speedBox3" class="speedBox"></div>
+                <div id="speedBox4" class="speedBox"></div>
+                <div id="speedBox5" class="speedBox"></div>
+                <div id="speedBox6" class="speedBox"></div>
+                <div id="speedBox7" class="speedBox"></div>
+                <div id="speedBox8" class="speedBox"></div>
+                <div id="speedBox9" class="speedBox"></div>
+                <div id="speedBox10" class="speedBox"></div>
+                <div id="speedBox11" class="speedBox"></div>
+                <div id="speedBox12" class="speedBox"></div>
+                <div id="speedBox13" class="speedBox"></div>
+                <div id="speedBox14" class="speedBox"></div>
+                <div id="speedBox15" class="speedBox"></div>
+            </div>
+
+            <div id="statLabelHP">HP</div>
+            <div id="statLabelAttack">Attack</div>
+            <div id="statLabelDefense">Defense</div>
+            <div id="statLabelSpecialAttack">Special Attack</div>
+            <div id="statLabelSpecialDefense">Special Defense</div>
+            <div id="statLabelSpeed">Speed</div>
+
+        </div>
+
+    </div>
+
+    <button id="shinyButton"></button>
+    <button id="pokemonCryButton"></button>
+
+
+    <div id="buttonContainer">
+        <button id="movesetButton"></button>
+        <button id="detailButton"></button>
+    </div>
+
+
+    <div id="speaker_container">
+        <div class="speakerBox"></div>
+        <div class="speakerBox"></div>
+        <div class="speakerBox"></div>
+    </div>
+
+    <div>
+        <input id="userInput" placeholder="Enter a Number or Name">
+    </div>
+
+    <div id="descriptionBox"></div>
+    
+    <div id="evolutionContainer">
+        <div id="baseEvolutionBox"></div>
+        <div id="evolution1Box"></div>
+        <div id="evolution2Box"></div>
+    </div>
+    
+
+    <script src="main.js"></script>
+    <script src="youtube.js"></script>
+
+</body>
+</html>

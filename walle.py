@@ -4,6 +4,10 @@ import logging
 from dotenv import load_dotenv
 import os
 
+import subprocess
+import webbrowser
+import asyncio
+
 
 
 load_dotenv()
@@ -98,16 +102,36 @@ async def assign_error(ctx, error):
     if isinstance(error, commands.MissingRole):          # if user is missing role
         await ctx.send("You do not have permission to use this command")
 
-
-
-
-
         
         
 @bot.command()
 async def dm(ctx, member: discord.Member, *, msg):      # use *, message to get user input
     await member.send(f"{ctx.author.mention} said {msg}")
     await ctx.send(f"Message sent to {member.mention}!")
+    
+
+@bot.command()
+async def pokedex(ctx):
+    
+    pokedex_path = os.getenv("POKEDEX_PATH")
+    
+    try:
+        subprocess.Popen(
+            ["python", "-m", "http.server", "8000"],
+            cwd = pokedex_path
+        )
+        
+        await ctx.send("Opening Pokedex . . .")
+        await asyncio.sleep(2)  # wait 2 seconds to open pokedex
+        
+        webbrowser.open("http://localhost:8000")
+        
+        await ctx.send("Opened Pokedex!")
+        
+    except:
+        await ctx.send("Could not open pokedex!")
+    
+    
 
 
 
