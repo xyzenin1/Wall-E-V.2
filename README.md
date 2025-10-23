@@ -24,4 +24,7 @@ DISCORD_TOKEN=
 
 <br><br>FFMPEG_PATH=
 
+<br><br>POKEDEX_PATH=
+
 <br><br> the POPCORN_ROLE and MASTER_ROLE can be any role you choose for the bot to assign
+<br>The pokedex path is your folder path to the project so that the bot can open it up
