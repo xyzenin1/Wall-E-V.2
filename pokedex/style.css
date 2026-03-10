@@ -305,19 +305,80 @@ p {
 
 
 #evolutionContainer {
-    width: 565px;
-    height: 100px;
-    background-color:black;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: fit-content;
+    min-width: 200px;
+    max-width: 565px;
+    background-color: #1a1a1a;
+    border: 3px solid black;
+    border-radius: 8px;
+    padding: 10px 14px;
     position: relative;
     left: 650px;
     bottom: 110px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
 }
 
-#baseEvolutionBox, #evolution1Box, #evolution2Box {
-    width: 20px;
-    height: 10px;
-    background-color: red;
-    margin: auto;
-    border: 1px solid white;
+.evo-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    background-color: #2a2a2a;
+    border: 2px solid #444;
+    border-radius: 6px;
+    padding: 4px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    min-width: 64px;
+}
 
+.evo-box:hover {
+    transform: scale(1.08);
+    border-color: aqua;
+}
+
+.evo-box.evo-current {
+    border-color: gold;
+    background-color: #3a3a20;
+}
+
+.evo-sprite {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+}
+
+.evo-placeholder {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 24px;
+}
+
+.evo-label {
+    font-family: "VT323", monospace;
+    font-size: 13px;
+    color: #ddd;
+    text-align: center;
+    margin-top: 2px;
+}
+
+.evo-arrow {
+    color: aqua;
+    font-size: 18px;
+    flex-shrink: 0;
+    padding: 0 2px;
+}
+
+.evo-error {
+    font-family: "VT323", monospace;
+    color: #888;
+    padding: 10px;
 }

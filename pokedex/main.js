@@ -7,6 +7,7 @@ const detailButton = document.getElementById("detailButton");
 const moveListElements = document.getElementsByClassName('moveListInfo');
 const generationSelect = document.getElementById('generationSelect');
 
+const evolutionContainer = document.getElementById('evolutionContainer');
 
 let minLevel = 1;
 let maxLevel = 100;
@@ -44,6 +45,8 @@ const pokemonCryButton = document.getElementById('pokemonCryButton');
 const blueLight = document.getElementById('blueCircle');
 const lightUpColors = ['#005956', '#00fcf4'];
 
+
+
 let colorIndex = 0;
       // set initial generation value
 
@@ -53,6 +56,7 @@ function changeBlueLightColor() {
 }
 
 const intervalId = setInterval(changeBlueLightColor, 1000);
+
 
 async function getPokemonData() {
     const inputValue = myInput.value.trim();
@@ -89,6 +93,7 @@ async function getPokemonData() {
             let pokemonSprite = data.sprites.front_default;
             const imageElement = document.getElementById("pokemonSprite");
             const pokeball = document.getElementById("pokeball");
+
             
             if (pokemonSprite) {
                 // if shiny button is active
@@ -146,6 +151,12 @@ async function getPokemonData() {
             await getTypeEffectiveness(data.types);
 
             await getStats(data.stats);
+
+            await getEvolutionChain(data.name);
+
+
+            // show evolution box
+            evolutionContainer.style.display = "flex";
 
     }
     catch(error) {
@@ -740,6 +751,123 @@ async function getMinimumLevel(pokemonName) {
     } catch (error) {
         console.error('Error fetching evolution data:', error);
         return 1; // Default to level 1 on error
+    }
+}
+
+
+
+
+
+
+async function getEvolutionChain(pokemonName) {
+    evolutionContainer.innerHTML = '';
+
+    try {
+        // Fetch base pokemon data to get species URL
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}/`);
+        if (!res.ok) throw new Error("Could not fetch pokemon");
+        const data = await res.json();
+
+        const speciesRes = await fetch(data.species.url);
+        const speciesData = await speciesRes.json();
+
+        const evoRes = await fetch(speciesData.evolution_chain.url);
+        const evoData = await evoRes.json();
+
+        // Flatten the evolution chain into a linear list of stages
+        // Handles branching by collecting all paths
+        function collectStages(chain) {
+            const stages = [];
+            let current = chain;
+            while (current) {
+                stages.push(current.species.name);
+                current = current.evolves_to && current.evolves_to.length > 0 ? current.evolves_to[0] : null;
+            }
+            return stages;
+        }
+
+        // Also handle branching evolutions (e.g. Eevee) — collect all branches
+        function collectAllPaths(chain, path = []) {
+            path = [...path, chain.species.name];
+            if (!chain.evolves_to || chain.evolves_to.length === 0) {
+                return [path];
+            }
+            return chain.evolves_to.flatMap(evo => collectAllPaths(evo, path));
+        }
+
+        // Find the path that contains the current pokemon
+        const allPaths = collectAllPaths(evoData.chain);
+        let stages = allPaths.find(path => path.includes(data.name)) || allPaths[0];
+
+        // Fetch sprite for each stage
+        const stageData = await Promise.all(stages.map(async (name) => {
+            try {
+                const r = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}/`);
+                const d = await r.json();
+                const sprite = isPokemonShiny
+                    ? (d.sprites.front_shiny || d.sprites.front_default)
+                    : (d.sprites.front_default);
+                return { name, sprite, id: d.id };
+            } 
+            catch {
+                return { name, sprite: null, id: null };
+            }
+        }));
+
+        // Render each stage with arrows between
+        stageData.forEach((stage, index) => {
+            if (index > 0) {
+                const arrow = document.createElement('div');
+                arrow.className = 'evo-arrow';
+                arrow.textContent = '▶';
+                evolutionContainer.appendChild(arrow);
+            }
+
+            const box = document.createElement('div');
+            box.className = 'evo-box';
+            box.dataset.name = stage.name;
+
+            const isCurrentPokemon = stage.name === data.name;
+
+            if (isCurrentPokemon) {
+                box.classList.add('evo-current');
+            }
+
+            if (stage.sprite) {
+                const img = document.createElement('img');
+                img.src = stage.sprite;
+                img.alt = stage.name;
+                img.className = 'evo-sprite';
+                box.appendChild(img);
+            } 
+            else {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'evo-placeholder';
+                placeholder.textContent = '?';
+                box.appendChild(placeholder);
+            }
+
+            const label = document.createElement('div');
+            label.className = 'evo-label';
+            label.textContent = stage.name.charAt(0).toUpperCase() + stage.name.slice(1);
+            box.appendChild(label);
+
+            // Click to load that pokemon
+            box.addEventListener('click', () => {
+                myInput.value = stage.name;
+                getPokemonData();
+                for (let j = 0; j < moveListElements.length; j++) {
+                    moveListElements[j].style.display = 'none';
+                }
+            });
+
+            evolutionContainer.appendChild(box);
+        });
+
+    } 
+    catch(error) {
+        console.error('Evolution chain error:', error);
+        evolutionContainer.innerHTML = '<div class="evo-error">Evolution data unavailable</div>';
     }
 }
 
